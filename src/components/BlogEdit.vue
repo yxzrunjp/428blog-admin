@@ -312,7 +312,7 @@ const dialogClose = () => {
     dialogConfig.show = false
 }
 const resetDialogForm = () => {
-    dialogFormRef.value.resetFields()
+    dialogFormRef?.value?.resetFields()
 }
 const setDialogInfo = () => {
     if (!currentBlogInfo.categoryId) {
