@@ -1,0 +1,30 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+.op{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.op .item{
+    color: rgb(106, 77, 173);
+    cursor: pointer;
+
+}
+.op .item:hover{
+    text-decoration: underline;
+}
+.op .disable{
+    color: gray;
+    cursor: not-allowed;
+}
