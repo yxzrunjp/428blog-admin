@@ -9,16 +9,16 @@
                             专题
                         </div>
                     </template>
-                    <Table :dataSource="tableData" :columns="columns" :showPagination="true" :fetch="loadDataList"
-                        :options="tableOptions">
+                    <Table ref="tableRef" :dataSource="tableData" :columns="columns" :showPagination="true"
+                        :fetch="loadDataList" :options="tableOptions" @rowClick="tableRowClick">
                         <template #cover="{ index, row }">
                             <Cover :src="row.cover"></Cover>
                         </template>
                         <template #op="{ index, row }">
                             <div class="op">
-                                <span class="item" @click="showEdit('update', row)">修改</span>
+                                <span class="item" @click.stop="showEdit('update', row)">修改</span>
                                 <el-divider direction="vertical"></el-divider>
-                                <span class="item" @click="handleDelete(row)">删除</span>
+                                <span class="item" @click.stop="handleDelete(row)">删除</span>
                             </div>
                         </template>
                     </Table>
@@ -31,7 +31,36 @@
                             专题文章
                         </div>
                     </template>
+                    <div class="special-blog-tree">
+                        <el-tree :data="treeData" :props="treeProps" draggable @node-drop="handleNodeDrop">
+                            <template #default="{ node, data }">
+                                <div class="tree-node">
+                                    <div class="node-title">
+                                        {{ node.label }}
+                                        <span :style="{ fontSize: '12px', color: 'red' }"
+                                            v-if="node.data.status === 0">（草稿）</span>
+                                    </div>
+                                    <div class="node-btns">
+                                        <template v-if="node.level === 1">
+                                            <span class="node-btn" @click.stop="showWindow('add', node)">新增文章</span>
+                                        </template>
+                                        <template v-else>
+                                            <span class="node-btn" @click.stop="previewBlog(node.data)">预览</span>
+                                            <el-divider direction="vertical"></el-divider>
+                                            <span class="node-btn" @click.stop="showWindow('update', node)">修改</span>
+                                            <el-divider direction="vertical"></el-divider>
+                                            <span class="node-btn" @click.stop="delTreeItem(node, data)">删除</span>
+                                            <el-divider direction="vertical"></el-divider>
+                                            <span class="node-btn" @click.stop="showWindow('add', node)">新增下级文章</span>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </el-tree>
+                    </div>
+                    <!-- <MyTree :treeData="treeData" :treeProps="treeProps" :showOptions="true"></MyTree> -->
                 </el-card>
+
             </el-col>
         </el-row>
 
@@ -55,19 +84,30 @@
 
             </el-form>
         </Dialog>
+
+        <!-- 编辑博客组件 -->
+        <SpecialBlogEdit ref="sepcialBlogEditRef" @closeWindow="closeWindowCB"></SpecialBlogEdit>
+        <!-- 预览博客组件 -->
+        <SpecialBlogDetail ref="sepcialBlogDetailRef" />
     </div>
 </template>
 
 <script setup>
-import { reactive, ref, nextTick, getCurrentInstance } from 'vue'
+import { reactive, ref, nextTick, getCurrentInstance, onMounted } from 'vue'
+import SpecialBlogEdit from '@/components/SpecialBlogEdit.vue'
+import SpecialBlogDetail from '@/components/SpecialBlogDetail.vue'
+// import MyTree from '@/components/MyTree.vue'
 const { proxy } = getCurrentInstance()
 const api = {
     loadDataList: '/category/loadCategory4Special',
     saveCategory: '/category/saveCategory4Special',
     delCategory: '/category/delCategory4Special',
+    getSpecialInfo: '/blog/getSpecialInfo',
+    recoveryBlog: '/blog/recoveryBlog',
+    updateSpecialBlogSort: '/blog/updateSpecialBlogSort',
 }
-
 // 表格
+const tableRef = ref(null)
 const columns = [
     {
         label: '封面',
@@ -114,9 +154,58 @@ const loadDataList = async () => {
         return
     }
     Object.assign(tableData, result.data)
+    // ====== 加载专题文章 =======
+    if (tableData?.list?.length) {
+        loadSpecial(tableData.list[0].categoryId)
+    }
+}
+const loadSpecial = async (categoryId) => {
+    await getSpecialInfo(categoryId)
+    nextTick(() => {
+        tableRef.value.setCurrentRow('categoryId', categoryId)
+    })
+}
+const tableRowClick = (row) => {
+    getSpecialInfo(row.categoryId)
+}
+// 修改专题事件
+const showEdit = (type, data) => {
+    dialogConfig.show = true
+    nextTick(() => {
+        if (type === 'add') {
+            dialogConfig.title = '新增专题'
+        } else if (type === 'update') {
+            dialogConfig.title = '编辑专题'
+            categoryId.value = data.categoryId
+            for (const key in formData) {
+                formData[key] = data[key]
+            }
+        }
+    })
+}
+// 删除专题事件
+const handleDelete = ({ categoryId, categoryName }) => {
+    proxy.Confirm(`确认删除${categoryName}?`, () => {
+        deleteItem(categoryId)
+    })
+}
+// 删除专题
+const deleteItem = async (categoryId) => {
+    const result = await proxy.Request({
+        url: api.delCategory,
+        params: {
+            categoryId
+        }
+    })
+    if (!result) {
+        return
+    }
+    proxy.Message.success('删除成功')
+    // 刷新数据
+    loadDataList()
 }
 
-// 弹窗相关
+// ========弹窗相关============
 const dialogConfig = reactive({
     show: false,
     title: '标题',//标题
@@ -148,22 +237,9 @@ const dialogClose = () => {
     dialogConfig.title = ''
     dialogConfig.show = false
 }
-const showEdit = (type, data) => {
-    dialogConfig.show = true
-    nextTick(() => {
-        if (type === 'add') {
-            dialogConfig.title = '新增专题'
-        } else if (type === 'update') {
-            dialogConfig.title = '编辑专题'
-            categoryId.value = data.categoryId
-            for (const key in formData) {
-                formData[key] = data[key]
-            }
-        }
-    })
-}
 
-// 表单相关
+
+// =========表单相关==========
 const categoryId = ref('')
 const formData = reactive({
     categoryName: '',
@@ -186,7 +262,7 @@ const submitForm = () => {
         }
         let params = {}
         Object.assign(params, formData)
-        if(categoryId.value){
+        if (categoryId.value) {
             params.categoryId = categoryId.value
         }
         const result = await proxy.Request({
@@ -209,30 +285,123 @@ const submitForm = () => {
     })
 }
 
-// 删除专题事件
-const handleDelete = ({ categoryId, categoryName }) => {
-    proxy.Confirm(`确认删除${categoryName}?`, () => {
-        deleteItem(categoryId)
-    })
+
+
+// =========专题文章==============
+const treeData = reactive([])
+const treeProps = {
+    children: 'children',
+    label: 'title',
+    value: 'blogId'
 }
-// 删除专题
-const deleteItem = async (categoryId) => {
+// 获取专题文章树
+const getSpecialInfo = async (categoryId) => {
     const result = await proxy.Request({
-        url: api.delCategory,
-        params: {
-            categoryId
-        }
+        url: api.getSpecialInfo,
+        params: { categoryId, showType: '1' }
     })
     if (!result) {
         return
     }
-    proxy.Message.success('删除成功')
-    // 刷新数据
+    Object.assign(treeData, result.data)
+}
+// 专题文章删除事件
+const delTreeItem = (node, data) => {
+    console.log(node, data);
+    proxy.Confirm(`是否删除${node.label}？`, async () => {
+        await deleteBlog(node.data.blogId)
+    })
+}
+// 删除文章
+const deleteBlog = async (blogId) => {
+    const result = await proxy.Request({
+        url: api.recoveryBlog,
+        params: {
+            blogId
+        }
+    })
+    if (!result)
+        return
     loadDataList()
+    proxy.Message.success('删除成功')
 }
 
+// 预览博客文章事件
+const sepcialBlogDetailRef = ref(null)
+const previewBlog = async (data) => {
+    sepcialBlogDetailRef.value.showDetail(data)
+}
+// 节点拖拽事件 共四个参数，依次为：被拖拽节点对应的 Node、结束拖拽时最后进入的节点、被拖拽节点的放置位置（before、after、inner）、event
+const handleNodeDrop = (node, enterNode, position) => {
+    const blogId = node.data.blogId
+    let parentNode = null
+    if (position === 'inner') {
+        // 移入下一级，enterNode为移入后的父节点
+        parentNode = enterNode
+    } else {
+        // 移到上一级，同级排序，enterNode的父节点为操作节点的父节点
+        parentNode = enterNode.parent
+    }
+    const pBlogId = parentNode.data.blogId
+    const blogIds = parentNode.childNodes.map(item => {
+        return item.data.blogId
+    }).join(',')
+    sortNode(blogId, pBlogId, blogIds)
+}
+// 排序
+const sortNode = async (blogId, pBlogId, blogIds) => {
+    const result = await proxy.Request({
+        url: api.updateSpecialBlogSort,
+        params: { blogId, pBlogId, blogIds },
+        showLoading: false,
+    })
+    if (!result)
+        return
+}
+
+// ==========新增，修改 专题文章===========
+const sepcialBlogEditRef = ref(null)
+const showWindow = (type, node) => {
+    const { data } = node
+    const { blogId, categoryId } = data
+    sepcialBlogEditRef.value.showWindow()
+    nextTick(() => {
+        if (type === 'update') {
+            sepcialBlogEditRef.value.setBlogId('update', blogId, categoryId)
+            sepcialBlogEditRef.value.getBlogInfo()
+        } else {
+            sepcialBlogEditRef.value.setBlogId('add', blogId, categoryId)
+        }
+    })
+}
+const closeWindowCB = (categoryId) => {
+    loadSpecial(categoryId)
+}
 </script>
 
 <style lang="scss" scoped>
-.blog-category {}
+.special-blog-tree {
+    .tree-node {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        .node-title {
+            margin-right: 10px;
+        }
+
+        .node-btns {
+            .node-btn {
+                color: rgb(112, 106, 178);
+                font-size: 12px;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+    }
+}
 </style>
