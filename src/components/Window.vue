@@ -1,9 +1,9 @@
 <template>
     <!-- v-if="show"  -->
     <div class="window-box" :style="{ width: width + 'px' }">
-        <div class="title">
-            <span>《</span>
-        </div>
+        <!-- <div class="title">
+            <span></span>
+        </div> -->
         <div class="body">
             <slot></slot>
         </div>
@@ -74,13 +74,13 @@ const props = defineProps({
     z-index: 50;
 
     .title {
-        height: 30px;
+        // height: 30px;
         display: flex;
         align-items: center;
     }
 
     .body {
-        height: calc(100% - 80px);
+        height: calc(100% - 50px);
     }
 
     .footer {
