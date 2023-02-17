@@ -9,6 +9,7 @@ const contentTypeFile = 'multipart/form-data';
 
 const request = (config) => {
     let { url, params, dataType, showLoading=true } = config
+    // 是否有传入dataType,没有则默认为form
     dataType = dataType ? dataType : 'form'
 
     let contentType = contentTypeForm
@@ -49,7 +50,6 @@ const request = (config) => {
             if (showLoading && loading) {
                 loading.close()
             }
-            message.error('发送请求失败')
             return Promise.reject('发送请求失败')
         }
     )

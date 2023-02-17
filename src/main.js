@@ -11,6 +11,7 @@ import '@/assets/icon/iconfont.css'
 import Request from '@/utils/Request'
 import Message from '@/utils/Message'
 import Confirm from '@/utils/Confirm'
+import Verify from '@/utils/Verify'
 
 import Table from '@/components/Table.vue'
 import Cover from '@/components/Cover.vue'
@@ -43,6 +44,7 @@ app.use(VMdEditor)
 app.config.globalProperties.Request = Request
 app.config.globalProperties.Message = Message
 app.config.globalProperties.Confirm = Confirm
+app.config.globalProperties.Verify = Verify
 
 app.config.globalProperties.globalInfo = {
     imageUrl:'/api/file/getImage/',

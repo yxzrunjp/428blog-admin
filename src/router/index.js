@@ -27,6 +27,11 @@ const routes = [
                 path: '/special/list',
                 component: () => import('../views/Special/SpecialList.vue')
             },
+            {
+                // name: "",
+                path: '/settings/myinfo',
+                component: () => import('../views/Settings/MyInfo.vue')
+            },
         ]
     },
     {

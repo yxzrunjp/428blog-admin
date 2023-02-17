@@ -101,7 +101,7 @@ const menuList = reactive([
         children: [
             {
                 title: '个人信息设置',
-                path: '',
+                path: '/settings/myinfo',
             },
             {
                 title: '博客成员',
