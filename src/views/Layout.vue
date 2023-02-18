@@ -111,7 +111,7 @@ const menuList = reactive([
             },
             {
                 title: '博客成员',
-                path: '',
+                path: '/settings/user',
             },
             {
                 title: '系统设置',
