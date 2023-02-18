@@ -25,10 +25,11 @@
 <script setup>
 import { ref, reactive, getCurrentInstance, nextTick, watch, onUnmounted } from 'vue'
 import BlogDetail from '@/components/BlogDetail.vue'
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 // 接口地址
 const api = {
-    getUserInfo: '/getUserInfo',
     getBlogById: '/blog/getBlogById',
     autoSaveBlog: '/blog/autoSaveBlog4Special',
     saveBlogSpecial: '/blog/saveBlog4Special'
@@ -45,22 +46,18 @@ const emit = defineEmits(['closeWindow'])
 const editorType = ref(0) //编辑器类型
 const editType = ref('add') //当前是新增博客add或是修改博客update
 
-const userInfo = reactive({}) //用户信息
-const getUserInfo = async () => {
-    const result = await proxy.Request({
-        url: api.getUserInfo,
-    })
-    if (!result) {
-        return
-    }
-    Object.assign(userInfo, result.data)
-    editorType.value = result.data.editorType
+// =================初始化===============
+const getUserEditorType = () => {
+    editorType.value = store.editorType
 }
-// 初始化
-const init = async () => {
-    await getUserInfo()
+const init = ()=>{
+    getUserEditorType()
 }
 init()
+// store获得数据后，获取最新的editorType
+store.$subscribe(()=>{
+    getUserEditorType()
+})
 
 // ============= 新增-编辑 博客 =============
 const blogId = ref('')//博客ID，修改传入，新增不传
@@ -128,7 +125,7 @@ const resetBlog = () => {
     editType.value = 'add'
     blogId.value = ''
     categoryId.value = ''
-    editorType.value = userInfo.editorType
+    editorType.value = store.editorType
     currentBlogInfo = reactive({})
 }
 

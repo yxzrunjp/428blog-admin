@@ -10,7 +10,7 @@ const verify = (rule,value,reg,callback)=>{
             callback(new Error(rule.message))
         }
     }else{
-        callback(new Error('请输入值'))
+        callback(new Error())
     }
 }
 

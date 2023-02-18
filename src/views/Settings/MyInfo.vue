@@ -13,7 +13,7 @@
                         <el-input v-model="formData.phone" placeholder="请输入手机号" />
                     </el-form-item>
                     <el-form-item label="密码">
-                        <a href="#" @click.prevent="() => { }">修改密码</a>
+                        <span @click="handleChangePwd">修改密码</span>
                     </el-form-item>
                     <el-form-item label="编辑器" prop="editorType">
                         <el-radio-group v-model="formData.editorType">
@@ -29,22 +29,44 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="16">
-                    <el-form-item props="introduction">
+                    <el-form-item label="简介" props="introduction">
                         <EditorHtml v-model="formData.introduction"></EditorHtml>
                     </el-form-item>
                 </el-col>
             </el-row>
         </el-form>
+
+        <Dialog :width="'600px'" :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons"
+            @close="dialogClose">
+            <el-form label-width="80px" :model="pswFormData" :rules="pswFormRules" ref="pswFormDataRef">
+                <el-form-item prop="password" label="密码">
+                    <el-input placeholder="请输入密码" v-model="pswFormData.password">
+                    </el-input>
+                </el-form-item>
+                <el-form-item prop="rePsw" label="重复密码">
+                    <el-input placeholder="请重复输入密码" v-model="pswFormData.rePsw">
+                        <!-- type="password"  -->
+                    </el-input>
+                </el-form-item>
+            </el-form>
+        </Dialog>
     </div>
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance, ref } from 'vue';
+import { reactive, getCurrentInstance, ref, nextTick } from 'vue';
+import md5 from 'js-md5'
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {
-    getUserInfo: '/getUserInfo',
     saveMyInfo: '/saveMyInfo',
+    updateMyPassword: '/updateMyPassword',
+
 }
+
+// ===========用户信息==============
+
 const formData = reactive({
     avatar: '',
     nickName: '',
@@ -56,7 +78,7 @@ const formData = reactive({
 const formRef = ref(null)
 const rules = reactive({
     avatar: [{ required: true, message: '请上传头像' }],
-    nickName: [{required: true, message:'请输入昵称' }],
+    nickName: [{ required: true, message: '请输入昵称' }],
 })
 const saveUserInfo = () => {
     formRef.value.validate(v => {
@@ -76,24 +98,120 @@ const submitForm = async () => {
     if (!result)
         return
     proxy.Message.success('保存成功')
-    init()
+    store.$patch({
+        ...params
+    })
+}
+const handleChangePwd = () => {
+    dialogShow()
 }
 
-const init = async () => {
-    await getUserInfo()
+// ===========修改密码=============
+function rePswValidator(rule, value, callback) {
+    if (value) {
+        if (value !== pswFormData.password) {
+            callback(new Error(rule.message))
+        } else {
+            callback()
+        }
+    } else {
+        callback(new Error())
+    }
 }
-const getUserInfo = async () => {
-    const result = await proxy.Request({
-        url: api.getUserInfo,
+
+const pswFormData = reactive({
+    password: '',
+    rePsw: '',
+})
+const pswFormDataRef = ref(null)
+const pswFormRules = reactive({
+    password: [
+        { required: true, message: '请输入密码' },
+        { min: 8, message: '请输入至少8位', trigger: 'blur' },
+        { validator: proxy.Verify.password, message: '密码最少8位,只能使用数字和字母和特殊字符', }
+    ],
+    rePsw: [
+        { required: true, message: '请再次输入密码' },
+        { validator: rePswValidator, message: '两次输入的密码不一致', }],
+})
+
+const dialogConfig = reactive({
+    show: false,
+    title: '',
+    buttons: [
+        {
+            type: 'danger',
+            text: '取消',
+            click: (e) => {
+                // 隐藏弹窗
+                nextTick(() => {
+                    dialogClose()
+                })
+            }
+        },
+        {
+            type: 'primary',
+            text: '确定',
+            click: (e) => {
+                // 提交表单
+                pswFormDataRef.value.validate(async (v) => {
+                    console.log(`验证`, v);
+                    if (!v) {
+                        return
+                    }
+                    await submitChangePwd()
+                    // 隐藏弹窗
+                    dialogClose()
+                })
+            }
+        },
+    ]
+})
+const dialogShow = () => {
+    dialogConfig.title = '修改密码'
+    dialogConfig.show = true
+}
+const dialogClose = () => {
+    resetPwdForm()
+    nextTick(() => {
+        dialogConfig.show = false
+        dialogConfig.title = ''
     })
-    if (!result) {
-        return
+
+}
+const resetPwdForm = () => {
+    pswFormDataRef.value.resetFields()
+}
+// 修改密码提交
+const submitChangePwd = async () => {
+    const params = {
+        password: md5(pswFormData.password)
     }
+    // const result = await proxy.Request({
+    //     url:api.updateMyPassword,
+    //     params
+    // })
+    // if(!result){
+    //     return
+    // }
+    proxy.Message.success('修改成功')
+}
+
+// store更新后，获取最新的用户信息
+store.$subscribe(() => {
+    getUserInfo()
+})
+
+const getUserInfo = () => {
     for (const key in formData) {
-        formData[key] = result.data[key]
+        formData[key] = store[key]
     }
+}
+const init = ()=>{
+    getUserInfo()
 }
 init()
+
 </script>
 
 <style lang="scss" scoped>

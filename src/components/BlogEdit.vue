@@ -77,12 +77,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance, nextTick, watch, onUnmounted } from 'vue'
+import { ref, reactive, getCurrentInstance, nextTick, watch, onUnmounted, onMounted } from 'vue'
 import BlogDetail from '@/components/BlogDetail.vue'
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 // 接口地址
 const api = {
-    getUserInfo: '/getUserInfo',
     getBlogById: '/blog/getBlogById',
     saveBlog: '/blog/saveBlog',
     autoSaveBlog: '/blog/autoSaveBlog',
@@ -97,22 +98,14 @@ const props = defineProps({
 })
 const emit = defineEmits(['closeWindow'])
 const editorType = ref(0) //编辑器类型
-const userInfo = reactive({}) //用户信息
-const getUserInfo = async () => {
-    const result = await proxy.Request({
-        url: api.getUserInfo,
-    })
-    if (!result) {
-        return
-    }
-    Object.assign(userInfo, result.data)
-    editorType.value = result.data.editorType
+
+const getUserEditorType = () => {
+    editorType.value = store.editorType
 }
-// 初始化
-const init = async () => {
-    await getUserInfo()
-}
-init()
+// store获得数据后，获取最新的editorType
+store.$subscribe(() => {
+    getUserEditorType()
+})
 
 // ============= 新增-编辑 博客 =============
 const blogId = ref('')//博客ID，修改传入，新增不传
@@ -178,7 +171,7 @@ const htmlContentChange = (html) => {
 const resetBlog = () => {
     blogFormRef.value.resetFields()
     blogId.value = ''
-    editorType.value = userInfo.editorType
+    editorType.value = store.editorType
     currentBlogInfo = reactive({})
 }
 // 获取博客信息
@@ -292,7 +285,7 @@ const dialogConfig = reactive({
             text: '取消',
             click: (e) => {
                 resetDialogForm()
-                nextTick(()=>{
+                nextTick(() => {
                     dialogClose()
                 })
             }
@@ -338,7 +331,7 @@ const submitBlog = async () => {
         }
         Object.assign(params, blogFormData, dialogFormData)
         params.tag = params?.tag?.length ? params.tag.join('|') : ''
-        if(params.type===0){
+        if (params.type === 0) {
             delete params.reprintUrl
             dialogFormData.reprintUrl = ''
         }
@@ -364,7 +357,10 @@ const submitBlog = async () => {
     })
 }
 
-
+const init = () => {
+    getUserEditorType()
+}
+init()
 
 defineExpose({
     showWindow,
@@ -375,6 +371,4 @@ defineExpose({
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

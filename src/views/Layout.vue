@@ -7,20 +7,22 @@
                     <span>欢迎回来，</span>
                     <el-dropdown>
                         <span class="el-dropdown-link">
-                            <span class="nickname">{{ userInfo.nickName }}</span>
+                            <span class="nickname">{{ store.nickName }}</span>
                             <el-icon class="el-icon--right">
                                 <arrow-down />
                             </el-icon>
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item>个人信息</el-dropdown-item>
-                                <el-dropdown-item>退出登录</el-dropdown-item>
+                                <router-link to='/settings/myinfo'>
+                                    <el-dropdown-item>个人信息</el-dropdown-item>
+                                </router-link>
+                                <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
                     <div class="head-img">
-                        <img :src="userInfo.avatar" alt="头像" :title="'头像'">
+                        <img :src="proxy.globalInfo.imageUrl + store.avatar" alt="头像" :title="'头像'">
                     </div>
                 </div>
             </el-header>
@@ -39,14 +41,15 @@
                             </span>
                             <ul class="sub-menu" v-show="menu.open">
                                 <!-- 二级标题 -->
-                                <li :class="currentPath === subMenu.path?'highlight':''" v-for="subMenu in menu.children" :key="subMenu.title">
+                                <li :class="currentPath === subMenu.path ? 'highlight' : ''"
+                                    v-for="subMenu in menu.children" :key="subMenu.title">
                                     <router-link class="link" :to="subMenu.path"><span class="sub-menu-item">{{
                                         subMenu.title
                                     }}</span></router-link>
                                 </li>
                                 <!-- <li v-for="subMenu in menu.children" :key="subMenu.title">
-                                    <span class="sub-menu-item">{{ subMenu.title }}</span>
-                                </li> -->
+                                                                        <span class="sub-menu-item">{{ subMenu.title }}</span>
+                                                                    </li> -->
                             </ul>
                         </li>
                     </ul>
@@ -63,9 +66,12 @@
 <script setup>
 import { reactive, getCurrentInstance, watch, ref } from 'vue';
 import { ArrowDown } from '@element-plus/icons-vue';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import cookies from 'vue-cookies';
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const route = useRoute()
+const router = useRouter()
 const { proxy } = getCurrentInstance()
 const menuList = reactive([
     {
@@ -127,23 +133,55 @@ const menuList = reactive([
 
 ])
 
-let userInfo = {}
-// 用户信息
-const init = () => {
-    userInfo = reactive(cookies.get('userInfo'))
-    userInfo.avatar = proxy.globalInfo.imageUrl + userInfo.avatar
+const api = {
+    getUserInfo: '/getUserInfo',
+    logout: '/logout',
 }
-init()
 
+// 用户信息
+const getUserInfo = async () => {
+    const result = await proxy.Request({
+        url: api.getUserInfo
+    })
+    if (!result)
+        return
+    const data = result.data
+    store.$patch({
+        ...data
+    })
+}
 const handleMenu = (menu) => {
     menu.open = !menu.open
 }
 
+// 退出登录
+const handleLogout = () => {
+    logout()
+
+}
+const logout = async () => {
+    const result = await proxy.Request({
+        url: api.logout
+    })
+    if (!result) {
+        return
+    }
+    cookies.remove('userInfo')
+    store.$reset()
+    router.push('/login')
+}
+
 const currentPath = ref('')
-watch(route,(newV,oldV)=>{
+watch(route, (newV, oldV) => {
     currentPath.value = newV.path
     console.log(currentPath.value);
-},{immediate:true,deep:true})
+}, { immediate: true, deep: true })
+
+const init = async () => {
+    // todo 请求接口获取用户信息
+    await getUserInfo()
+}
+init()
 </script>
 
 <style lang="scss" scoped>
@@ -260,7 +298,7 @@ watch(route,(newV,oldV)=>{
                         }
                     }
 
-                    .highlight{
+                    .highlight {
                         background-color: rgb(137, 147, 147);
                     }
 
