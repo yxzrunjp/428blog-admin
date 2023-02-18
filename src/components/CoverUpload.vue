@@ -3,11 +3,9 @@
         <el-upload name="file" :show-file-list="false" :accept="accept.join(',')" :multiple="false"
             :http-request="uploadImage">
             <div class="add-box">
-
                 <template v-if="modelValue">
                     <img :src="proxy.globalInfo.imageUrl + modelValue" alt="">
                 </template>
-
                 <span v-else>+</span>
             </div>
 

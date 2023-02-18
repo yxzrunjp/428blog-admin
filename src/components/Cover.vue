@@ -1,8 +1,9 @@
 <template>
-    <div class="cover">
-        <img :src="proxy.globalInfo.imageUrl+src" v-if="src">
-        <span v-else>暂无封面</span>
+    <div v-if="src" class="cover" :style="{ backgroundImage: `url(${proxy.globalInfo.imageUrl + src})` }">
+        <!-- <img :src="proxy.globalInfo.imageUrl+src" v-if="src">
+            <span v-else>暂无封面</span> -->
     </div>
+    <div v-else class="cover">暂无封面</div>
 </template>
 
 <script setup>
@@ -24,11 +25,14 @@ const props = defineProps({
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 80px;
     height: 80px;
     overflow: hidden;
-    img {
-        width: 100%;
-    }
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    // img {
+    //     width: 100%;
+    // }
 }
 </style>
