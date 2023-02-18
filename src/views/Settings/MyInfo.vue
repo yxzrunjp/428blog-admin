@@ -40,11 +40,11 @@
             @close="dialogClose">
             <el-form label-width="80px" :model="pswFormData" :rules="pswFormRules" ref="pswFormDataRef">
                 <el-form-item prop="password" label="密码">
-                    <el-input placeholder="请输入密码" v-model="pswFormData.password">
+                    <el-input type="password" placeholder="请输入密码" v-model="pswFormData.password">
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="rePsw" label="重复密码">
-                    <el-input placeholder="请重复输入密码" v-model="pswFormData.rePsw">
+                    <el-input type="password" placeholder="请重复输入密码" v-model="pswFormData.rePsw">
                         <!-- type="password"  -->
                     </el-input>
                 </el-form-item>
@@ -55,14 +55,16 @@
 
 <script setup>
 import { reactive, getCurrentInstance, ref, nextTick } from 'vue';
-import md5 from 'js-md5'
 import { useUserInfoStore } from '@/store/userInfoStore'
+import cookies from 'vue-cookies'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {
     saveMyInfo: '/saveMyInfo',
     updateMyPassword: '/updateMyPassword',
-
+    logout: '/logout',
 }
 
 // ===========用户信息==============
@@ -185,16 +187,30 @@ const resetPwdForm = () => {
 // 修改密码提交
 const submitChangePwd = async () => {
     const params = {
-        password: md5(pswFormData.password)
+        password: pswFormData.password
     }
-    // const result = await proxy.Request({
-    //     url:api.updateMyPassword,
-    //     params
-    // })
-    // if(!result){
-    //     return
-    // }
-    proxy.Message.success('修改成功')
+    const result = await proxy.Request({
+        url: api.updateMyPassword,
+        params
+    })
+    if (!result) {
+        return
+    }
+    proxy.Message.success('修改成功,请重新登录')
+    setTimeout(() => {
+        logout()
+    }, 2000)
+}
+const logout = async () => {
+    const result = await proxy.Request({
+        url: api.logout
+    })
+    if (!result) {
+        return
+    }
+    cookies.remove('userInfo')
+    store.$reset()
+    router.push('/login')
 }
 
 // store更新后，获取最新的用户信息
@@ -207,7 +223,7 @@ const getUserInfo = () => {
         formData[key] = store[key]
     }
 }
-const init = ()=>{
+const init = () => {
     getUserInfo()
 }
 init()
