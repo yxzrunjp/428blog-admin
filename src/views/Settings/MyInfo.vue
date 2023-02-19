@@ -209,6 +209,7 @@ const logout = async () => {
         return
     }
     cookies.remove('userInfo')
+    cookies.remove('loginInfo')
     store.$reset()
     router.push('/login')
 }

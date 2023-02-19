@@ -59,8 +59,10 @@
                         <!-- row.status === 0 已禁用，点击则启用 -->
                         <span v-else class="item" @click="handleForbit(row)">启用</span>
                         <el-divider direction="vertical"></el-divider>
-                        <span class="item" @click="handlePsw(row)">修改密码</span>
-                        <el-divider direction="vertical"></el-divider>
+                        <template v-if="store.userId !== row.userId">
+                            <span class="item" @click="handlePsw(row)">修改密码</span>
+                            <el-divider direction="vertical"></el-divider>
+                        </template>
                         <span class="item" @click="handleDelete(row)">删除</span>
                     </div>
                 </template>
@@ -146,6 +148,8 @@
 
 <script setup>
 import { reactive, getCurrentInstance, ref, nextTick } from 'vue';
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {
     loadUser: '/setting/loadUser',
@@ -191,7 +195,7 @@ const updateStatus = async (userId, status) => {
     if (!result) {
         return
     }
-   
+
     loadDataList()
 }
 // 删除成员事件

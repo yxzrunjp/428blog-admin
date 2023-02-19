@@ -84,8 +84,10 @@ const login = () => {
         if (!valid) {
             return
         } else {
+            // 获取已存在的登录信息
             const cookiesInfo = cookies.get('loginInfo')
             const cpwd = cookiesInfo ? cookiesInfo.password : null
+            // 当前输入的密码和登录信息用的密码（已加密）不相同，则进行加密
             if (formData.password !== cpwd) {
                 formData.password = md5(formData.password)
             }
@@ -122,9 +124,9 @@ const login = () => {
             }
             proxy.Message.success('登录成功')
             changeCheckCode()
-            setTimeout(()=>{
+            setTimeout(() => {
                 router.replace('/')
-            },1500)
+            }, 1500)
         }
     })
 }
@@ -136,9 +138,9 @@ const enterKeyDownEvent = (e) => {
 }
 
 // 按下enter
-document.addEventListener('keydown',enterKeyDownEvent)
-onUnmounted(()=>{
-    document.removeEventListener('keydown',enterKeyDownEvent)
+document.addEventListener('keydown', enterKeyDownEvent)
+onUnmounted(() => {
+    document.removeEventListener('keydown', enterKeyDownEvent)
 })
 </script>
 
