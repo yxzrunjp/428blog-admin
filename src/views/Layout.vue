@@ -41,15 +41,19 @@
                             </span>
                             <ul class="sub-menu" v-show="menu.open">
                                 <!-- 二级标题 -->
-                                <li :class="currentPath === subMenu.path ? 'highlight' : ''"
-                                    v-for="subMenu in menu.children" :key="subMenu.title">
-                                    <router-link class="link" :to="subMenu.path"><span class="sub-menu-item">{{
-                                        subMenu.title
-                                    }}</span></router-link>
-                                </li>
+                                <template v-for="subMenu in menu.children">
+                                    <template v-if="subMenu.roleType === undefined || subMenu.roleType === store.roleType">
+                                        <li :class="currentPath === subMenu.path ? 'highlight' : ''" :key="subMenu.title">
+                                            <router-link class="link" :to="subMenu.path"><span class="sub-menu-item">{{
+                                                subMenu.title
+                                            }}</span></router-link>
+                                        </li>
+                                    </template>
+                                </template>
+
                                 <!-- <li v-for="subMenu in menu.children" :key="subMenu.title">
-                                                                                                                            <span class="sub-menu-item">{{ subMenu.title }}</span>
-                                                                                                                        </li> -->
+                                                                                                                                                    <span class="sub-menu-item">{{ subMenu.title }}</span>
+                                                                                                                                                </li> -->
                             </ul>
                         </li>
                     </ul>
@@ -132,6 +136,7 @@ const menuList = reactive([
             {
                 title: '系统设置',
                 path: '/settings/sysinfo',
+                roleType: 1,
             },
         ]
     },
@@ -211,7 +216,7 @@ const releaseResult = reactive({
 const checkProgress = async () => {
     const result = await proxy.Request({
         url: api.checkProgress,
-        showLoading:false,
+        showLoading: false,
     })
     if (!result)
         return
@@ -425,4 +430,5 @@ init()
     .releace-success {
         color: #13a04e
     }
-}</style>
+}
+</style>

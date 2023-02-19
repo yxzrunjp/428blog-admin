@@ -63,10 +63,14 @@
                 </template>
                 <template #op="{ index, row }">
                     <div class="tableop">
-                        <span class="text-click" @click="showWindow('update', row)">修改</span>
-                        <el-divider direction="vertical"></el-divider>
-                        <span class="text-click" @click="handleDelete(row)">删除</span>
-                        <el-divider direction="vertical"></el-divider>
+                        <template v-if="store.userId === row.userId">
+                            <span class="text-click" @click="showWindow('update', row)">修改</span>
+                            <el-divider direction="vertical"></el-divider>
+                        </template>
+                        <template v-if="store.userId === row.userId">
+                            <span class="text-click" @click="handleDelete(row)">删除</span>
+                            <el-divider direction="vertical"></el-divider>
+                        </template>
                         <span class="text-click" @click="handlePreview(row)">预览</span>
                     </div>
                 </template>
@@ -79,7 +83,8 @@
 <script setup>
 import { reactive, getCurrentInstance, ref, nextTick, } from 'vue';
 import BlogEdit from '@/components/BlogEdit.vue'
-
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {
     loadAllCategory: '/category/loadAllCategory4Blog',
@@ -164,6 +169,7 @@ const columns = [
         prop: 'op',
         width: 200,
         scopedSlots: 'op',
+        align: 'center'
     },
 ]
 const tableData = reactive({

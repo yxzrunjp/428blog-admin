@@ -1,13 +1,15 @@
 <template>
     <div class="blog-category">
-        <el-button type="danger" @click="showEdit('add')">新增分类</el-button>
+        <!-- 管理员（roleType===1）才有权新增分类 -->
+        <el-button v-if="store.roleType===1" type="danger" @click="showEdit('add')">新增分类</el-button>
         <Table :dataSource="tableData" :columns="columns" :showPagination="false" :fetch="loadDataList"
             :options="tableOptions">
             <template #cover="{ index, row }">
                 <Cover :src="row.cover"></Cover>
             </template>
             <template #op="{ index, row }">
-                <div class="tableop">
+                 <!-- 管理员（roleType===1）才有权对分类进行操作 -->
+                <div class="tableop" v-if="store.roleType===1">
                     <span class="text-click" @click="showEdit('update', row)">修改</span>
                     <el-divider direction="vertical"></el-divider>
                     <span class="text-click" @click="handleDelete(row)">删除</span>
@@ -43,7 +45,9 @@
 </template>
 
 <script setup>
-import { reactive, ref, nextTick, getCurrentInstance, computed, toRaw } from 'vue'
+import { reactive, ref, nextTick, getCurrentInstance, computed } from 'vue'
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {
     loadDataList: '/category/loadAllCategory4Blog',
@@ -79,6 +83,7 @@ const columns = [
         prop: 'op',
         width: 200,
         scopedSlots: 'op',
+        align:'center'
     },
 ]
 const tableData = reactive({

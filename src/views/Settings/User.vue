@@ -17,7 +17,8 @@
                     </el-col>
                     <el-col :span="8">
                         <el-button type="primary" @click="handleSearch">搜索</el-button>
-                        <el-button type="primary" @click="handleMember('add')">新增成员</el-button>
+                        <!-- 管理员才能新增成员 -->
+                        <el-button v-if="store.roleType === 1" type="primary" @click="handleMember('add')">新增成员</el-button>
                     </el-col>
                 </el-row>
             </el-form>
@@ -51,7 +52,8 @@
                     <div>上一次登录时间：{{ row.lastLoginTime || '无记录' }}</div>
                 </template>
                 <template #op="{ index, row }">
-                    <div class="tableop">
+                    <!-- 管理员才能进行操作 -->
+                    <div class="tableop" v-if="store.roleType === 1">
                         <span class="text-click" @click="handleMember('update', row)">修改信息</span>
                         <el-divider direction="vertical"></el-divider>
                         <!-- row.status === 1 已启用，点击则禁用 -->
@@ -261,6 +263,7 @@ const columns = reactive([
         prop: 'op',
         width: 300,
         scopedSlots: 'op',
+        align:'center'
     },
 ])
 const tableOptions = {

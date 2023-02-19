@@ -15,7 +15,8 @@
                             <Cover :src="row.cover"></Cover>
                         </template>
                         <template #op="{ index, row }">
-                            <div class="tableop">
+                            <!-- 只能对自己的专题进行操作 -->
+                            <div class="tableop" v-if="store.userId === row.userId">
                                 <span class="text-click" @click.stop="showEdit('update', row)">修改</span>
                                 <el-divider direction="vertical"></el-divider>
                                 <span class="text-click" @click.stop="handleDelete(row)">删除</span>
@@ -47,10 +48,14 @@
                                         <template v-else>
                                             <span class="text-click" @click.stop="previewBlog(node.data)">预览</span>
                                             <el-divider direction="vertical"></el-divider>
-                                            <span class="text-click" @click.stop="showWindow('update', node)">修改</span>
-                                            <el-divider direction="vertical"></el-divider>
-                                            <span class="text-click" @click.stop="delTreeItem(node, data)">删除</span>
-                                            <el-divider direction="vertical"></el-divider>
+                                            <template v-if="store.userId === node.data.userId">
+                                                <span class="text-click" @click.stop="showWindow('update', node)">修改</span>
+                                                <el-divider direction="vertical"></el-divider>
+                                            </template>
+                                            <template v-if="store.userId === node.data.userId">
+                                                <span class="text-click" @click.stop="delTreeItem(node, data)">删除</span>
+                                                <el-divider direction="vertical"></el-divider>
+                                            </template>
                                             <span class="text-click" @click.stop="showWindow('add', node)">新增下级文章</span>
                                         </template>
                                     </div>
@@ -58,7 +63,6 @@
                             </template>
                         </el-tree>
                     </div>
-                    <!-- <MyTree :treeData="treeData" :treeProps="treeProps" :showOptions="true"></MyTree> -->
                 </el-card>
 
             </el-col>
@@ -93,10 +97,11 @@
 </template>
 
 <script setup>
-import { reactive, ref, nextTick, getCurrentInstance, onMounted } from 'vue'
+import { reactive, ref, nextTick, getCurrentInstance } from 'vue'
 import SpecialBlogEdit from '@/components/SpecialBlogEdit.vue'
 import SpecialBlogDetail from '@/components/SpecialBlogDetail.vue'
-// import MyTree from '@/components/MyTree.vue'
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {
     loadDataList: '/category/loadCategory4Special',
@@ -134,6 +139,7 @@ const columns = [
         prop: 'op',
         width: 200,
         scopedSlots: 'op',
+        align: 'center'
     },
 ]
 const tableData = reactive({
@@ -390,6 +396,6 @@ const closeWindowCB = (categoryId) => {
         .node-title {
             margin-right: 10px;
         }
-}
+    }
 }
 </style>

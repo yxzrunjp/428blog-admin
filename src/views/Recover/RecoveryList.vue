@@ -29,7 +29,7 @@
                 <div>更新时间：{{ row.lastUpdateTime || '无记录' }}</div>
             </template>
             <template #op="{ index, row }">
-                <div class="tableop">
+                <div class="tableop" v-if="store.userId === row.userId">
                     <span class="text-click" @click="handleRecover(row)">还原</span>
                     <el-divider direction="vertical"></el-divider>
                     <span class="text-click" @click="handleDelete(row)">删除</span>
@@ -40,7 +40,9 @@
 </template>
 
 <script setup>
-import { reactive, ref, getCurrentInstance, } from 'vue'
+import { reactive, getCurrentInstance, } from 'vue'
+import { useUserInfoStore } from '@/store/userInfoStore'
+const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {
     loadRecoveryList: '/blog/loadRecoveryList',
