@@ -40,6 +40,10 @@ const routes = [
                 path: '/settings/sysinfo',
                 component: () => import('../views/Settings/SysInfo.vue')
             },
+            {
+                path: '/recover/list',
+                component: () => import('../views/Recover/RecoveryList.vue')
+            },
         ]
     },
     {

@@ -126,7 +126,7 @@ const menuList = reactive([
         children: [
             {
                 title: '回收站',
-                path: '',
+                path: '/recover/list',
             },
         ]
     },
