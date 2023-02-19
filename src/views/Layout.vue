@@ -29,7 +29,7 @@
             <el-container class="container">
                 <el-aside class="left-aside">
                     <div>
-                        <el-button class="post-btn">发布</el-button>
+                        <el-button @click="handleRelease" class="post-btn">发布</el-button>
                     </div>
                     <ul class="menu-panel">
                         <!-- 一级标题 -->
@@ -48,8 +48,8 @@
                                     }}</span></router-link>
                                 </li>
                                 <!-- <li v-for="subMenu in menu.children" :key="subMenu.title">
-                                                                        <span class="sub-menu-item">{{ subMenu.title }}</span>
-                                                                    </li> -->
+                                                                                                                            <span class="sub-menu-item">{{ subMenu.title }}</span>
+                                                                                                                        </li> -->
                             </ul>
                         </li>
                     </ul>
@@ -60,11 +60,27 @@
             </el-container>
         </el-container>
     </div>
+
+    <Dialog :width="'500px'" :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons"
+        @close="dialogClose">
+        <div class="process-box">
+            <el-progress :width="250" type="dashboard" :percentage="releaseResult.progress" :color="colors" />
+            <div :style="{ marginTop: '10px' }" v-if="releaseResult.result === 0">
+                <div>生成页面出错了：{{ releaseResult.errorMsg }}</div>
+                <div class="info">具体错误请查看服务器日志</div>
+            </div>
+            <div :style="{ marginTop: '10px' }" class="releace-success"
+                v-if="releaseResult.result === 1 && releaseResult.progress === 100">
+                发布成功
+            </div>
+            <el-button :style="{ marginTop: '20px' }" type="primary" @click="handleClose">关闭</el-button>
+        </div>
+    </Dialog>
 </template>
   
 
 <script setup>
-import { reactive, getCurrentInstance, watch, ref } from 'vue';
+import { reactive, getCurrentInstance, watch, ref, nextTick } from 'vue';
 import { ArrowDown } from '@element-plus/icons-vue';
 import { useRoute, useRouter } from 'vue-router'
 import cookies from 'vue-cookies';
@@ -136,6 +152,8 @@ const menuList = reactive([
 const api = {
     getUserInfo: '/getUserInfo',
     logout: '/logout',
+    createHtml: '/createHtml',
+    checkProgress: '/checkProgress',
 }
 
 // 用户信息
@@ -171,6 +189,73 @@ const logout = async () => {
     store.$reset()
     router.push('/login')
 }
+
+// 发布
+const handleRelease = () => {
+    createHtml()
+}
+const createHtml = async () => {
+    const result = await proxy.Request({
+        url: api.createHtml,
+    })
+    if (!result)
+        return
+    dialogShow()
+    checkProgress()
+}
+const releaseResult = reactive({
+    result: 0,
+    progress: 0,
+    errorMsg: ""
+})
+const checkProgress = async () => {
+    const result = await proxy.Request({
+        url: api.checkProgress,
+        showLoading:false,
+    })
+    if (!result)
+        return
+    Object.assign(releaseResult, result.data)
+
+    if (releaseResult.progress !== 100) {
+        setTimeout(() => {
+            checkProgress()
+        }, 1000)
+    }
+}
+
+// 弹窗相关
+const dialogConfig = reactive({
+    show: false,
+    title: '发布',//标题
+    buttons: [
+    ],//按钮集合
+
+})
+const dialogClose = () => {
+    dialogConfig.show = false
+}
+const dialogShow = () => {
+    dialogConfig.show = true
+}
+// 关闭弹窗
+const handleClose = () => {
+    dialogClose()
+    nextTick(() => {
+        releaseResult.result = 0
+        releaseResult.progress = 0
+        releaseResult.errorMsg = ""
+    })
+}
+
+// 进度条
+const colors = [
+    { color: '#f56c6c', percentage: 20 },
+    { color: '#e6a23c', percentage: 40 },
+    { color: '#5cb87a', percentage: 60 },
+    { color: '#1989fa', percentage: 80 },
+    { color: '#6f7ad3', percentage: 100 },
+]
 
 const currentPath = ref('')
 watch(route, (newV, oldV) => {
@@ -321,5 +406,23 @@ init()
             position: relative;
         }
     }
+
+
 }
-</style>
+
+.process-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .info {
+        font-size: 12px;
+        color: brown;
+    }
+
+    .releace-success {
+        color: #13a04e
+    }
+}</style>
