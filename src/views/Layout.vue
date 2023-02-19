@@ -115,7 +115,7 @@ const menuList = reactive([
             },
             {
                 title: '系统设置',
-                path: '',
+                path: '/settings/sysinfo',
             },
         ]
     },
@@ -167,6 +167,7 @@ const logout = async () => {
         return
     }
     cookies.remove('userInfo')
+    cookies.remove('loginInfo')
     store.$reset()
     router.push('/login')
 }

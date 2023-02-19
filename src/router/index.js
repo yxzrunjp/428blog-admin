@@ -35,7 +35,11 @@ const routes = [
             {
                 path: '/settings/user',
                 component: () => import('../views/Settings/User.vue')
-            }
+            },
+            {
+                path: '/settings/sysinfo',
+                component: () => import('../views/Settings/SysInfo.vue')
+            },
         ]
     },
     {
