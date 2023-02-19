@@ -13,7 +13,7 @@
                         <el-input v-model="formData.phone" placeholder="请输入手机号" />
                     </el-form-item>
                     <el-form-item label="密码">
-                        <span @click="handleChangePwd">修改密码</span>
+                        <span class="text-click" @click="handleChangePwd">修改密码</span>
                     </el-form-item>
                     <el-form-item label="编辑器" prop="editorType">
                         <el-radio-group v-model="formData.editorType">

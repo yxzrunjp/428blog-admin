@@ -7,14 +7,14 @@
                 <Cover :src="row.cover"></Cover>
             </template>
             <template #op="{ index, row }">
-                <div class="op">
-                    <span class="item" @click="showEdit('update', row)">修改</span>
+                <div class="tableop">
+                    <span class="text-click" @click="showEdit('update', row)">修改</span>
                     <el-divider direction="vertical"></el-divider>
-                    <span class="item" @click="handleDelete(row)">删除</span>
+                    <span class="text-click" @click="handleDelete(row)">删除</span>
                     <el-divider direction="vertical"></el-divider>
-                    <span :class="[index === 0 ? 'disable' : 'item']" @click="changeSort(index, 'up')">上移</span>
+                    <span :class="[index === 0 ? 'text-disable' : 'text-click']" @click="changeSort(index, 'up')">上移</span>
                     <el-divider direction="vertical"></el-divider>
-                    <span :class="[index === tableLastIndex ? 'disable' : 'item']"
+                    <span :class="[index === tableLastIndex ? 'text-disable' : 'text-click']"
                         @click="changeSort(index, 'down')">下移</span>
                 </div>
             </template>

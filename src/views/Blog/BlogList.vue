@@ -62,12 +62,12 @@
                     <div>更新时间：{{ row.lastUpdateTime }}</div>
                 </template>
                 <template #op="{ index, row }">
-                    <div class="op">
-                        <span class="item" @click="showWindow('update', row)">修改</span>
+                    <div class="tableop">
+                        <span class="text-click" @click="showWindow('update', row)">修改</span>
                         <el-divider direction="vertical"></el-divider>
-                        <span class="item" @click="handleDelete(row)">删除</span>
+                        <span class="text-click" @click="handleDelete(row)">删除</span>
                         <el-divider direction="vertical"></el-divider>
-                        <span class="item" @click="handlePreview(row)">预览</span>
+                        <span class="text-click" @click="handlePreview(row)">预览</span>
                     </div>
                 </template>
             </Table>

@@ -15,10 +15,10 @@
                             <Cover :src="row.cover"></Cover>
                         </template>
                         <template #op="{ index, row }">
-                            <div class="op">
-                                <span class="item" @click.stop="showEdit('update', row)">修改</span>
+                            <div class="tableop">
+                                <span class="text-click" @click.stop="showEdit('update', row)">修改</span>
                                 <el-divider direction="vertical"></el-divider>
-                                <span class="item" @click.stop="handleDelete(row)">删除</span>
+                                <span class="text-click" @click.stop="handleDelete(row)">删除</span>
                             </div>
                         </template>
                     </Table>
@@ -42,16 +42,16 @@
                                     </div>
                                     <div class="node-btns">
                                         <template v-if="node.level === 1">
-                                            <span class="node-btn" @click.stop="showWindow('add', node)">新增文章</span>
+                                            <span class="text-click" @click.stop="showWindow('add', node)">新增文章</span>
                                         </template>
                                         <template v-else>
-                                            <span class="node-btn" @click.stop="previewBlog(node.data)">预览</span>
+                                            <span class="text-click" @click.stop="previewBlog(node.data)">预览</span>
                                             <el-divider direction="vertical"></el-divider>
-                                            <span class="node-btn" @click.stop="showWindow('update', node)">修改</span>
+                                            <span class="text-click" @click.stop="showWindow('update', node)">修改</span>
                                             <el-divider direction="vertical"></el-divider>
-                                            <span class="node-btn" @click.stop="delTreeItem(node, data)">删除</span>
+                                            <span class="text-click" @click.stop="delTreeItem(node, data)">删除</span>
                                             <el-divider direction="vertical"></el-divider>
-                                            <span class="node-btn" @click.stop="showWindow('add', node)">新增下级文章</span>
+                                            <span class="text-click" @click.stop="showWindow('add', node)">新增下级文章</span>
                                         </template>
                                     </div>
                                 </div>
@@ -390,18 +390,6 @@ const closeWindowCB = (categoryId) => {
         .node-title {
             margin-right: 10px;
         }
-
-        .node-btns {
-            .node-btn {
-                color: rgb(112, 106, 178);
-                font-size: 12px;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-        }
-
-    }
+}
 }
 </style>

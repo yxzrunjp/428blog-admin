@@ -51,19 +51,19 @@
                     <div>上一次登录时间：{{ row.lastLoginTime || '无记录' }}</div>
                 </template>
                 <template #op="{ index, row }">
-                    <div class="op">
-                        <span class="item" @click="handleMember('update', row)">修改信息</span>
+                    <div class="tableop">
+                        <span class="text-click" @click="handleMember('update', row)">修改信息</span>
                         <el-divider direction="vertical"></el-divider>
                         <!-- row.status === 1 已启用，点击则禁用 -->
-                        <span v-if="row.status === 1" class="item" @click="handleForbit(row)">禁用</span>
+                        <span v-if="row.status === 1" class="text-click" @click="handleForbit(row)">禁用</span>
                         <!-- row.status === 0 已禁用，点击则启用 -->
-                        <span v-else class="item" @click="handleForbit(row)">启用</span>
+                        <span v-else class="text-click" @click="handleForbit(row)">启用</span>
                         <el-divider direction="vertical"></el-divider>
                         <template v-if="store.userId !== row.userId">
-                            <span class="item" @click="handlePsw(row)">修改密码</span>
+                            <span class="text-click" @click="handlePsw(row)">修改密码</span>
                             <el-divider direction="vertical"></el-divider>
                         </template>
-                        <span class="item" @click="handleDelete(row)">删除</span>
+                        <span class="text-click" @click="handleDelete(row)">删除</span>
                     </div>
                 </template>
             </Table>

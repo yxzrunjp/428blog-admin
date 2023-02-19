@@ -45,7 +45,7 @@
                 </el-form-item>
             </template>
             <el-form-item label="下载静态页面">
-                <span class="downBtn" @click="handleDownload">点击下载</span>
+                <span class="text-click" @click="handleDownload">点击下载</span>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="handleSave">保存</el-button>
@@ -148,15 +148,6 @@ init()
 
 <style lang="scss" scoped>
 .sys-info {
-    .downBtn {
-        cursor: pointer;
-        color: #4b4eec;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
     .el-input {
         width: 350px;
     }
