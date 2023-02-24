@@ -123,7 +123,7 @@ const columns = [
     {
         label: '名称',
         prop: 'categoryName',
-        width: 200
+        width: 170
     },
     {
         label: '简介',
@@ -132,7 +132,7 @@ const columns = [
     {
         label: '博客数量',
         prop: 'blogCount',
-        width: 100,
+        width: 80,
     },
     {
         label: '操作',
@@ -381,7 +381,8 @@ const showWindow = (type, node) => {
     })
 }
 const closeWindowCB = (categoryId) => {
-    loadSpecial(categoryId)
+    // loadSpecial(categoryId)
+    loadDataList()
 }
 </script>
 

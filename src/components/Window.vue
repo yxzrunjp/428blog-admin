@@ -81,6 +81,7 @@ const props = defineProps({
 
     .body {
         height: calc(100% - 50px);
+        overflow-y: scroll;
     }
 
     .footer {
