@@ -1,6 +1,6 @@
 <template>
     <Window v-if="windowConfig.show" :buttons="windowConfig.buttons">
-        <el-row :style="{ height: '100%',overflowY:'scroll'}" :gutter="10">
+        <el-row :style="{ height: '100%', overflowY: 'scroll' }" :gutter="10">
             <el-col :span="6">
                 <el-card>
                     <template #header>
@@ -9,7 +9,8 @@
                         </div>
                     </template>
                     <div class="special-blog-tree">
-                        <el-tree :highlight-current="true" ref="treeRef" :data="treeData" :props="treeProps" @node-click="nodeClick" node-key="blogId">
+                        <el-tree :highlight-current="true" ref="treeRef" :data="treeData" :props="treeProps"
+                            @node-click="nodeClick" node-key="blogId">
                             <template #default="{ node, data }">
                                 <div class="tree-node">
                                     <div class="node-title">
@@ -39,12 +40,17 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance, nextTick,ref } from 'vue';
-
+import { reactive, getCurrentInstance, nextTick, ref } from 'vue';
+import hljs from 'highlight.js';
 const { proxy } = getCurrentInstance()
 const api = {
     getBlogById: '/blog/getBlogById',
     getSpecialInfo: '/blog/getSpecialInfo',
+}
+const highlightCode = () => {
+    document.querySelectorAll('pre code').forEach(el => {
+        hljs.highlightElement(el)
+    })
 }
 const blog = reactive({})
 const windowConfig = reactive({
@@ -66,12 +72,17 @@ const getDetail = async (blogId) => {
         return
     }
     Object.assign(blog, result.data)
+    if (blog.editorType === 0) {
+        nextTick(() => {
+            highlightCode()
+        })
+    }
 }
 const showDetail = async (data) => {
     windowConfig.show = true
     await getDetail(data.blogId)
-    await getSpecialInfo(data.categoryId,data)
-    nextTick(()=>{
+    await getSpecialInfo(data.categoryId, data)
+    nextTick(() => {
         treeRef.value.setCurrentKey(data.blogId)
     })
 
@@ -91,7 +102,7 @@ const nodeClick = (data) => {
     getDetail(data.blogId)
 }
 // 获取专题文章树
-const getSpecialInfo = async (categoryId,data) => {
+const getSpecialInfo = async (categoryId, data) => {
     const result = await proxy.Request({
         url: api.getSpecialInfo,
         params: { categoryId, showType: '1' }

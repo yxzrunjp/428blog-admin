@@ -7,39 +7,49 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance, nextTick,} from 'vue';
+import { reactive, getCurrentInstance, nextTick, } from 'vue';
+import hljs from 'highlight.js';
 
 const { proxy } = getCurrentInstance()
 const api = {
     getBlogById: '/blog/getBlogById',
 }
+const highlightCode = () => {
+    document.querySelectorAll('pre code').forEach(el => {
+        hljs.highlightElement(el)
+    })
+}
 const blog = reactive({})
 const windowConfig = reactive({
     show: false,
     buttons: [{
-        type:'primary',
-        text:'返回',
-        click:()=>{
+        type: 'primary',
+        text: '返回',
+        click: () => {
             closeDetail()
         }
     }],
 })
-const getDetail = async (blogId)=>{
+const getDetail = async (blogId) => {
     const result = await proxy.Request({
-        url:api.getBlogById,
-        params:{blogId}
+        url: api.getBlogById,
+        params: { blogId }
     })
-    if(!result){
+    if (!result) {
         return
     }
-    Object.assign(blog,result.data)
+    Object.assign(blog, result.data)
+    if (blog.editorType === 0) {
+        nextTick(() => {
+            highlightCode()
+        })
+    }
 }
 const showDetail = (blogId) => {
     windowConfig.show = true
-    console.log(blogId);
     getDetail(blogId)
 }
-const closeDetail = ()=>{
+const closeDetail = () => {
     windowConfig.show = false
 }
 
@@ -47,7 +57,7 @@ defineExpose({ showDetail })
 </script>
 
 <style lang="scss" scoped>
-.detail-title{
+.detail-title {
     font-size: 18px;
     text-align: center;
 }
