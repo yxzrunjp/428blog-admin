@@ -5,15 +5,19 @@
                 <el-form-item prop="title">
                     <el-input placeholder="请输入标题" v-model="blogFormData.title" />
                 </el-form-item>
-                <el-form-item v-if="editorType === 1" prop="markdownContent">
-                    <EditorMarkdown v-model="blogFormData.markdownContent" :editorHeight="height"
-                        @htmlContentChange="htmlContentChange">
-                    </EditorMarkdown>
-                </el-form-item>
-                <el-form-item v-else prop="content">
-                    <EditorHtml v-model="blogFormData.content" :editorHeight="height">
-                    </EditorHtml>
-                </el-form-item>
+                <template v-if="editorType === 1">
+                    <el-form-item prop="markdownContent">
+                        <EditorMarkdown v-model="blogFormData.markdownContent" :editorHeight="height"
+                            @htmlContentChange="htmlContentChange">
+                        </EditorMarkdown>
+                    </el-form-item>
+                </template>
+                <template v-else>
+                    <el-form-item prop="content">
+                        <EditorHtml v-model="blogFormData.content" :editorHeight="height">
+                        </EditorHtml>
+                    </el-form-item>
+                </template>
             </el-form>
         </div>
     </Window>
@@ -120,7 +124,7 @@ const blogRules = reactive({
     content: [{ required: true, message: '请输入正文' }],//html内容
     markdownContent: [{ required: true, message: '请输入正文' }],//markdown内容
 })
-const blogFormRef = ref()
+const blogFormRef = ref(null)
 const height = window.innerHeight - 220
 const windowConfig = reactive({
     show: false,
@@ -132,7 +136,6 @@ const windowConfig = reactive({
                 // 重置dialog表单->重置blog表单
                 resetDialogForm()
                 resetBlog()
-
                 nextTick(() => {
                     hiddenWindow()
                     emit('closeWindow')
@@ -170,6 +173,8 @@ const htmlContentChange = (html) => {
 }
 const resetBlog = () => {
     blogFormRef.value.resetFields()
+    blogFormData.content = ''
+    blogFormData.markdownContent = ''
     blogId.value = ''
     editorType.value = store.editorType
     currentBlogInfo = reactive({})
@@ -306,6 +311,7 @@ const dialogClose = () => {
 }
 const resetDialogForm = () => {
     dialogFormRef?.value?.resetFields()
+    dialogFormRef.reprintUrl = ''
 }
 const setDialogInfo = () => {
     if (!currentBlogInfo.categoryId) {

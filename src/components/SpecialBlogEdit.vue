@@ -122,6 +122,8 @@ const htmlContentChange = (html) => {
 }
 const resetBlog = () => {
     blogFormRef.value.resetFields()
+    blogFormData.content = ''
+    blogFormData.markdownContent = ''
     editType.value = 'add'
     blogId.value = ''
     categoryId.value = ''
