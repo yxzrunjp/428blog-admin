@@ -12,7 +12,7 @@ import 'element-plus/dist/index.css'
 // 图标
 import '@/assets/icon/iconfont.css'
 
-
+// utils
 import Request from '@/utils/Request'
 import Message from '@/utils/Message'
 import Confirm from '@/utils/Confirm'
@@ -30,11 +30,13 @@ import EditorHtml from '@/components/EditorHtml.vue'
 // markdown编辑器
 import VMdPreviewHtml from '@kangc/v-md-editor/lib/preview-html';
 import '@kangc/v-md-editor/lib/style/preview-html.css';
+
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';// 引入使用主题的样式
+
 import VMdEditor from '@kangc/v-md-editor';
 import '@kangc/v-md-editor/lib/style/base-editor.css';
-import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
-// 引入使用主题的样式
-import '@kangc/v-md-editor/lib/theme/style/github.css';
+
 import hljs from 'highlight.js';
 VMdEditor.use(githubTheme, {
     Hljs: hljs,
