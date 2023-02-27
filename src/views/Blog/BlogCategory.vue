@@ -1,7 +1,7 @@
 <template>
     <div class="blog-category">
         <!-- 管理员（roleType===1）才有权新增分类 -->
-        <el-button v-if="store.roleType===1" type="danger" @click="showEdit('add')">新增分类</el-button>
+        <el-button v-if="store.roleType===1" type="primary" @click="showEdit('add')">新增分类</el-button>
         <Table :dataSource="tableData" :columns="columns" :showPagination="false" :fetch="loadDataList"
             :options="tableOptions">
             <template #cover="{ index, row }">

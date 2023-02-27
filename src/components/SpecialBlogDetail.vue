@@ -120,5 +120,18 @@ defineExpose({ showDetail })
 .detail-title {
     font-size: 18px;
     text-align: center;
+
+}
+
+.special-blog-tree {
+    .tree-node {
+        .node-title {
+            width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+    }
 }
 </style>

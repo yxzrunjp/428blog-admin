@@ -1,6 +1,6 @@
 <template>
     <div class="special-list">
-        <el-button :style="{ marginBottom: '10px' }" type="danger" @click="showEdit('add')">新增专题</el-button>
+        <el-button :style="{ marginBottom: '10px' }" type="primary" @click="showEdit('add')">新增专题</el-button>
         <el-row :gutter="10">
             <el-col :span="14">
                 <el-card>
@@ -396,6 +396,10 @@ const closeWindowCB = (categoryId) => {
 
         .node-title {
             margin-right: 10px;
+            width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 }

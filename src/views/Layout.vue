@@ -2,7 +2,10 @@
     <div class="layout">
         <el-container>
             <el-header class="header">
-                <div class="logo">LOGO</div>
+                <div class="logo">
+                    <img src="../assets/img/cloud.png">
+                    <span class="title">浮云博客管理系统</span>
+                </div>
                 <div class="user-info">
                     <span>欢迎回来，</span>
                     <el-dropdown>
@@ -37,7 +40,7 @@
                             <span class="menu-title-container" @click="handleMenu(menu)">
                                 <span :class="['iconfont', menu.icon]"></span>
                                 <span class="menu-title">{{ menu.title }}</span>
-                                <span :class="['iconfont', menu.open ? 'icon-account' : 'icon-Password']"></span>
+                                <span :class="['iconfont', menu.open ? 'icon-arrowup' : 'icon-arrowdown']"></span>
                             </span>
                             <ul class="sub-menu" v-show="menu.open">
                                 <!-- 二级标题 -->
@@ -50,10 +53,6 @@
                                         </li>
                                     </template>
                                 </template>
-
-                                <!-- <li v-for="subMenu in menu.children" :key="subMenu.title">
-                                                                                                                                                    <span class="sub-menu-item">{{ subMenu.title }}</span>
-                                                                                                                                                </li> -->
                             </ul>
                         </li>
                     </ul>
@@ -96,7 +95,7 @@ const { proxy } = getCurrentInstance()
 const menuList = reactive([
     {
         title: '博客',
-        icon: 'icon-account',
+        icon: 'icon-boke',
         open: true,
         children: [
             {
@@ -111,8 +110,8 @@ const menuList = reactive([
     },
     {
         title: '专题',
-        icon: 'icon-account',
-        open: false,
+        icon: 'icon-zhuanti',
+        open: true,
         children: [
             {
                 title: '专题管理',
@@ -122,8 +121,8 @@ const menuList = reactive([
     },
     {
         title: '设置',
-        icon: 'icon-account',
-        open: false,
+        icon: 'icon-shezhi',
+        open: true,
         children: [
             {
                 title: '个人信息设置',
@@ -142,8 +141,8 @@ const menuList = reactive([
     },
     {
         title: '回收站',
-        icon: 'icon-account',
-        open: false,
+        icon: 'icon-huishouzhan',
+        open: true,
         children: [
             {
                 title: '回收站',
@@ -269,7 +268,6 @@ watch(route, (newV, oldV) => {
 }, { immediate: true, deep: true })
 
 const init = async () => {
-    // todo 请求接口获取用户信息
     await getUserInfo()
 }
 init()
@@ -282,9 +280,25 @@ init()
         display: flex;
         justify-content: space-between;
         align-items: center;
+        background-color: #70a1ff;
 
         .logo {
-            font-size: 30px;
+            font-size: 0px;
+            padding-left: 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            img {
+                width: 50px;
+                margin-right: 10px;
+            }
+
+            .title {
+                color: #3742fa;
+                font-size: 18px;
+                font-weight: bold;
+            }
         }
 
         .user-info {
@@ -296,10 +310,18 @@ init()
                 height: 21px;
                 line-height: 21px;
 
-                .nickname {
-                    color: orange;
-                    cursor: pointer;
+                .el-dropdown-link {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+
+                    .nickname {
+                        color: #3742fa;
+                        font-size: 18px;
+                        cursor: pointer;
+                    }
                 }
+
             }
 
             .head-img {
@@ -313,13 +335,6 @@ init()
                     height: 40px;
                 }
             }
-
-            // .example-showcase .el-dropdown-link {
-            //     cursor: pointer;
-            //     color: var(--el-color-primary);
-            //     display: flex;
-            //     align-items: center;
-            // }
         }
     }
 
@@ -333,8 +348,8 @@ init()
             padding: 0 15px;
 
             .post-btn {
-                background-color: orange;
-                color: white;
+                background-color: #70a1ff;
+                color: #fff;
                 height: 40px;
                 width: 100%;
                 margin-bottom: 16px;
@@ -351,7 +366,7 @@ init()
                     transition: all .3s;
 
                     &:hover {
-                        background-color: #fff;
+                        background-color: #70a1ff;
                     }
 
                     .menu-title {
@@ -365,9 +380,6 @@ init()
                     color: rgb(85, 82, 82);
 
                     li {
-                        // padding-left: 32px;
-                        // display: flex;
-                        // align-items: center;
                         line-height: 30px;
                         height: 30px;
                         border-radius: 4px;
@@ -375,22 +387,18 @@ init()
                         transition: all .3s;
 
                         .link {
-                            // width:100%;
                             padding-left: 32px;
                             display: block;
                         }
 
                         &:hover {
-                            background-color: antiquewhite;
+                            background-color: #70a1ff;
                         }
 
-                        .sub-menu-item {
-                            // line-height: 30px;
-                        }
                     }
 
                     .highlight {
-                        background-color: rgb(137, 147, 147);
+                        background-color: #70a1ff;
                     }
 
                 }

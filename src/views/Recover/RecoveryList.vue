@@ -7,7 +7,7 @@
                         <el-input v-model="formData.titleFuzzy" />
                     </el-form-item>
                 </el-col>
-                <el-col :span="6"><el-button type="danger" @click="handleSearch">搜索</el-button></el-col>
+                <el-col :span="6"><el-button type="primary" @click="handleSearch">搜索</el-button></el-col>
             </el-row>
         </el-form>
         <Table :dataSource="tableData" :columns="columns" :showPagination="true" :fetch="loadDataList"

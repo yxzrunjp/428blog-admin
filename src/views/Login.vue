@@ -148,7 +148,7 @@ onUnmounted(() => {
 .login-body {
     width: 100%;
     height: 100vh;
-    background-image: url('../assets/login-bg.jpg');
+    background-image: url('../assets/img/login-bg.jpg');
     background-size: cover;
     background-position: center;
     position: relative;
