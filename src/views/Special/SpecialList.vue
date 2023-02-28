@@ -33,7 +33,7 @@
                         </div>
                     </template>
                     <div class="special-blog-tree">
-                        <el-tree :data="treeData" :props="treeProps" draggable @node-drop="handleNodeDrop">
+                        <el-tree :expand-on-click-node="false" :default-expand-all="true" :data="treeData" :props="treeProps" draggable @node-drop="handleNodeDrop">
                             <template #default="{ node, data }">
                                 <div class="tree-node">
                                     <div class="node-title">

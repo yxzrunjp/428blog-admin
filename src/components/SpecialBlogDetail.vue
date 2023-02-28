@@ -9,7 +9,7 @@
                         </div>
                     </template>
                     <div class="special-blog-tree">
-                        <el-tree :highlight-current="true" ref="treeRef" :data="treeData" :props="treeProps"
+                        <el-tree :expand-on-click-node="false" :default-expand-all="true" :highlight-current="true" ref="treeRef" :data="treeData" :props="treeProps"
                             @node-click="nodeClick" node-key="blogId">
                             <template #default="{ node, data }">
                                 <div class="tree-node">
