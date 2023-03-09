@@ -22,13 +22,6 @@ const routes = [
                 path: '/blog/category',
                 component: () => import('../views/Blog/BlogCategory.vue')
             },
-            // {
-            //     meta:{
-            //         name:""
-            //     },
-            //     path: '/blog/test',
-            //     component: () => import('../views/Blog/Test.vue')
-            // },
             {
                 meta: {
                     name: "专题管理"
