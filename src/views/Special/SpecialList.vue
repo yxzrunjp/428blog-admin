@@ -313,7 +313,6 @@ const getSpecialInfo = async (categoryId) => {
 }
 // 专题文章删除事件
 const delTreeItem = (node, data) => {
-    console.log(node, data);
     proxy.Confirm(`是否删除${node.label}？`, async () => {
         await deleteBlog(node.data.blogId)
     })

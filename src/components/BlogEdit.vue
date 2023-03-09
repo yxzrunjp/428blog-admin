@@ -216,7 +216,6 @@ const autoSaveBlog = async () => {
         return
     }
     blogId.value = result.data
-    console.log(result);
 }
 const clearTimer = () => {
     if (timer) {

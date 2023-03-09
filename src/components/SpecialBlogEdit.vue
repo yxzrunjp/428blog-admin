@@ -169,7 +169,6 @@ const submitInfo = async () => {
     }
     params.editorType = editorType.value
     params.categoryId = categoryId.value
-    console.log(params);
     const result = await proxy.Request({
         url: api.saveBlogSpecial,
         params

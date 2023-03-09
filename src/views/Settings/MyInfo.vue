@@ -157,7 +157,6 @@ const dialogConfig = reactive({
             click: (e) => {
                 // 提交表单
                 pswFormDataRef.value.validate(async (v) => {
-                    console.log(`验证`, v);
                     if (!v) {
                         return
                     }

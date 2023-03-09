@@ -19,33 +19,17 @@ import { ref, onMounted, onBeforeUnmount, onUpdated, onUnmounted, onBeforeMount,
 // 250px导航栏,margin-right 15px
 const width = ref(window.innerWidth - 265)
 const resizeWidth = (e) => {
-    console.log(e);
     width.value = window.innerWidth - 265
 }
 
-onBeforeMount(() => {
-    console.log(`onBeforeMount`);
-})
 onMounted(() => {
-    console.log(`onMounted`);
     window.addEventListener('resize', resizeWidth)
 })
 
-onBeforeUpdate(() => {
-    console.log(`onBeforeUpdate`);
-})
-onUpdated(() => {
-    console.log(`onUpdated`);
-})
-
-
 onBeforeUnmount(() => {
-    console.log(`onBeforeUnmount`);
     window.removeEventListener('resize', resizeWidth)
 })
-onUnmounted(() => {
-    console.log(`onUnmounted`);
-})
+
 
 const props = defineProps({
     // show: {

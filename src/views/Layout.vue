@@ -264,7 +264,6 @@ const colors = [
 const currentPath = ref('')
 watch(route, (newV, oldV) => {
     currentPath.value = newV.path
-    console.log(currentPath.value);
 }, { immediate: true, deep: true })
 
 const init = async () => {

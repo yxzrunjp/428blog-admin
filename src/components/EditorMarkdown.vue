@@ -27,7 +27,6 @@ const props = defineProps({
 
 
 const handleUploadImage = async (event, insertImage, files) => {
-    // console.log(event, insertImage, files);
     const result = await proxy.Request({
         url: '/file/uploadImage',
         dataType: 'file',
