@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElLoading } from 'element-plus';
+// import { ElLoading } from 'element-plus';
 import router from '@/router'
 import message from '@/utils/Message';
 import cookies from 'vue-cookies'

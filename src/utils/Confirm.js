@@ -1,4 +1,4 @@
-import { ElMessageBox } from "element-plus"
+// import { ElMessageBox } from "element-plus"
 
 const confirm = (msg,cb)=>{
     ElMessageBox.confirm(msg,'提示',{confirmButtonText:'确认',cancelButtonText:'取消',type:'info'})

@@ -6,8 +6,8 @@ import router from '@/router'
 // pinia
 import { createPinia } from 'pinia'
 // element-ui
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
+// import ElementPlus from 'element-plus'
+// import 'element-plus/dist/index.css'
 
 // 图标
 import '@/assets/icon/iconfont.css'
@@ -46,7 +46,7 @@ VMdEditor.use(githubTheme, {
 const app = createApp(App);
 app.use(createPinia())
 app.use(router)
-app.use(ElementPlus)
+// app.use(ElementPlus)
 app.use(VMdPreviewHtml);
 app.use(VMdEditor)
 
