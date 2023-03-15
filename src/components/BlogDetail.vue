@@ -1,7 +1,6 @@
 <template>
     <Window v-if="windowConfig.show" :buttons="windowConfig.buttons">
         <div class="detail-title">{{ blog.title }}</div>
-        <!-- <div v-html="blog.content"></div> -->
         <v-md-preview-html :html="blog.content" preview-class="github-markdown-body"></v-md-preview-html>
     </Window>
 </template>
@@ -9,6 +8,8 @@
 <script setup>
 import { reactive, getCurrentInstance, nextTick, } from 'vue';
 import hljs from 'highlight.js';
+import VMdPreviewHtml from '@kangc/v-md-editor/lib/preview-html';
+import '@kangc/v-md-editor/lib/style/preview-html.css';
 
 const { proxy } = getCurrentInstance()
 const api = {

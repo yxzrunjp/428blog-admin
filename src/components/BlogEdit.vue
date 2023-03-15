@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance, nextTick, watch, onUnmounted, onMounted } from 'vue'
+import { ref, reactive, getCurrentInstance, nextTick, watch, onUnmounted } from 'vue'
 import BlogDetail from '@/components/BlogDetail.vue'
 import { useUserInfoStore } from '@/store/userInfoStore'
 const store = useUserInfoStore()

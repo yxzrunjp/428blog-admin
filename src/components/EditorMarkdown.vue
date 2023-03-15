@@ -8,7 +8,17 @@
 
 <script setup>
 import { getCurrentInstance } from 'vue';
+// markdown编辑器
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';// 引入使用主题的样式
 
+import VMdEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+
+import hljs from 'highlight.js';
+VMdEditor.use(githubTheme, {
+    Hljs: hljs,
+});
 
 
 const { proxy } = getCurrentInstance();

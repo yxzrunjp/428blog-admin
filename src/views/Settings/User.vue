@@ -151,6 +151,7 @@
 <script setup>
 import { reactive, getCurrentInstance, ref, nextTick } from 'vue';
 import { useUserInfoStore } from '@/store/userInfoStore'
+import Verify from '@/utils/Verify';
 const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {
@@ -312,7 +313,7 @@ const dialogFormRules = reactive({
     nickName: [{ required: true, message: '请输入昵称' }],
     phone: [
         { required: true, message: '请输入手机号' },
-        { validator: proxy.Verify.phone, message: '手机号格式不正确' }
+        { validator: Verify.phone, message: '手机号格式不正确' }
     ],
     password: [
         { required: true, message: '请输入密码' },
@@ -423,7 +424,7 @@ const pswFormRules = reactive({
     password: [
         { required: true, message: '请输入密码' },
         { min: 8, message: '请输入至少8位', trigger: 'blur' },
-        { validator: proxy.Verify.password, message: '密码最少8位,只能使用数字和字母和特殊字符', }
+        { validator: Verify.password, message: '密码最少8位,只能使用数字和字母和特殊字符', }
     ],
     rePsw: [
         { required: true, message: '请再次输入密码' },

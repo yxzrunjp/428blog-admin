@@ -31,7 +31,6 @@
                             {{ blog.title }}
                         </div>
                     </template>
-                    <!-- <div v-html="blog.content"></div> -->
                     <v-md-preview-html :html="blog.content" preview-class="github-markdown-body"></v-md-preview-html>
                 </el-card>
             </el-col>
@@ -42,6 +41,9 @@
 <script setup>
 import { reactive, getCurrentInstance, nextTick, ref } from 'vue';
 import hljs from 'highlight.js';
+import VMdPreviewHtml from '@kangc/v-md-editor/lib/preview-html';
+import '@kangc/v-md-editor/lib/style/preview-html.css';
+
 const { proxy } = getCurrentInstance()
 const api = {
     getBlogById: '/blog/getBlogById',
