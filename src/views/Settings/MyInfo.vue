@@ -58,6 +58,7 @@ import { reactive, getCurrentInstance, ref, nextTick } from 'vue';
 import { useUserInfoStore } from '@/store/userInfoStore'
 import cookies from 'vue-cookies'
 import { useRouter } from 'vue-router'
+import Verify from '@/utils/Verify';
 const router = useRouter()
 const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
@@ -130,7 +131,7 @@ const pswFormRules = reactive({
     password: [
         { required: true, message: '请输入密码' },
         { min: 8, message: '请输入至少8位', trigger: 'blur' },
-        { validator: proxy.Verify.password, message: '密码最少8位,只能使用数字和字母和特殊字符', }
+        { validator: Verify.password, message: '密码最少8位,只能使用数字和字母和特殊字符', }
     ],
     rePsw: [
         { required: true, message: '请再次输入密码' },
