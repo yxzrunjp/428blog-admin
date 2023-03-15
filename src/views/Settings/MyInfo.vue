@@ -59,6 +59,7 @@ import { useUserInfoStore } from '@/store/userInfoStore'
 import cookies from 'vue-cookies'
 import { useRouter } from 'vue-router'
 import Verify from '@/utils/Verify';
+import EditorHtml from '@/components/EditorHtml.vue';
 const router = useRouter()
 const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()

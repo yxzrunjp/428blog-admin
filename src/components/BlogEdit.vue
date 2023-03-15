@@ -84,6 +84,8 @@
 import { ref, reactive, getCurrentInstance, nextTick, watch, onUnmounted } from 'vue'
 import BlogDetail from '@/components/BlogDetail.vue'
 import { useUserInfoStore } from '@/store/userInfoStore'
+import EditorMarkdown from './EditorMarkdown.vue';
+import EditorHtml from './EditorHtml.vue';
 const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 // 接口地址

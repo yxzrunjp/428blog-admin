@@ -152,6 +152,7 @@
 import { reactive, getCurrentInstance, ref, nextTick } from 'vue';
 import { useUserInfoStore } from '@/store/userInfoStore'
 import Verify from '@/utils/Verify';
+import EditorHtml from '@/components/EditorHtml.vue';
 const store = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 const api = {

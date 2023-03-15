@@ -8,8 +8,10 @@
 <script setup>
 import { reactive, getCurrentInstance, nextTick, } from 'vue';
 import hljs from 'highlight.js';
+
 import VMdPreviewHtml from '@kangc/v-md-editor/lib/preview-html';
 import '@kangc/v-md-editor/lib/style/preview-html.css';
+import '@kangc/v-md-editor/lib/theme/style/github.css';// 引入使用主题的样式
 
 const { proxy } = getCurrentInstance()
 const api = {
