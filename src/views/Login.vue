@@ -1,37 +1,39 @@
 <template>
     <div class="login-body">
-        <div class="login-panel">
-            <h2 class="login-title">用户登录</h2>
-            <el-form :model="formData" :rules="rules" ref="formDataRef">
-                <el-form-item prop="account" label="">
-                    <el-input placeholder="请输入账号" v-model="formData.account">
-                        <template #prefix>
-                            <span class="iconfont icon-account"></span>
-                        </template>
-                    </el-input>
-                </el-form-item>
+        <div class="login-body-height">
+            <div class="login-panel">
+                <h2 class="login-title">用户登录</h2>
+                <el-form :model="formData" :rules="rules" ref="formDataRef">
+                    <el-form-item prop="account" label="">
+                        <el-input placeholder="请输入账号" v-model="formData.account">
+                            <template #prefix>
+                                <span class="iconfont icon-account"></span>
+                            </template>
+                        </el-input>
+                    </el-form-item>
 
-                <el-form-item prop="password" label="">
-                    <el-input type="password" placeholder="请输入密码" v-model="formData.password">
-                        <template #prefix>
-                            <span class="iconfont icon-Password"></span>
-                        </template>
-                    </el-input>
-                </el-form-item>
+                    <el-form-item prop="password" label="">
+                        <el-input type="password" placeholder="请输入密码" v-model="formData.password">
+                            <template #prefix>
+                                <span class="iconfont icon-Password"></span>
+                            </template>
+                        </el-input>
+                    </el-form-item>
 
-                <el-form-item prop="checkCode" class="checkcode-item" label="">
-                    <el-input placeholder="请输入验证码" v-model="formData.checkCode"></el-input>
-                    <img @click="changeCheckCode" :src="checkCodeUrl" alt="验证码">
-                </el-form-item>
+                    <el-form-item prop="checkCode" class="checkcode-item" label="">
+                        <el-input placeholder="请输入验证码" v-model="formData.checkCode"></el-input>
+                        <img @click="changeCheckCode" :src="checkCodeUrl" alt="验证码">
+                    </el-form-item>
 
-                <el-form-item label="">
-                    <el-checkbox v-model="formData.rememberMe">记住我</el-checkbox>
-                </el-form-item>
+                    <el-form-item label="">
+                        <el-checkbox v-model="formData.rememberMe">记住我</el-checkbox>
+                    </el-form-item>
 
-                <el-form-item label="">
-                    <el-button @click="login" type="primary" :style="{ width: '100%' }">登录</el-button>
-                </el-form-item>
-            </el-form>
+                    <el-form-item label="">
+                        <el-button @click="login" type="primary" :style="{ width: '100%' }">登录</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
         </div>
     </div>
 </template>
@@ -47,8 +49,6 @@ const api = {
     checkCode: '/api/checkCode',
     login: '/login',
 }
-
-
 
 // 表单相关
 const formData = reactive({
@@ -148,43 +148,54 @@ onUnmounted(() => {
 .login-body {
     width: 100%;
     height: 100vh;
-    background-image: url('../assets/img/login-bg.jpg');
+    background-image: url('../assets/img/login-bg-blur.jpg');
     background-size: cover;
     background-position: center;
-    position: relative;
 
-    .login-panel {
-        position: absolute;
-        right: 60px;
-        top: 200px;
-        width: 350px;
-        padding: 10px 20px 0px;
-        border-radius: 10px;
-        background-color: rgba($color: #fff, $alpha: .7);
-        box-shadow: 10px 10px 8px rgba(#000, .3);
+    .login-body-height {
+        width: 100%;
+        height: 100%;
+        background-image: url('../assets/img/login-bg.jpg');
+        background-size: cover;
+        background-position: center;
+        position: relative;
 
-        .login-title {
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
+        .login-panel {
+            position: absolute;
+            right: 60px;
+            top: 200px;
+            width: 350px;
+            padding: 10px 20px 0px;
+            border-radius: 10px;
+            background-color: rgba($color: #fff, $alpha: .7);
+            box-shadow: 10px 10px 8px rgba(#000, .3);
+            font-size: 16px;
 
-        .checkcode-item {
-            display: flex;
-            justify-content: space-between;
-
-            img {
-                flex: 0;
-                width: 100px;
-                height: 100%;
-                margin-left: 20px;
-                cursor: pointer;
+            .login-title {
+                font-size: 20px;
+                text-align: center;
+                margin-bottom: 10px;
             }
 
-            .el-input {
-                flex: 1;
+            .checkcode-item {
+                display: flex;
+                justify-content: space-between;
+
+                img {
+                    flex: 0;
+                    width: 100px;
+                    height: 100%;
+                    margin-left: 20px;
+                    cursor: pointer;
+                }
+
+                .el-input {
+                    flex: 1;
+                }
             }
         }
     }
+
+
 }
 </style>
